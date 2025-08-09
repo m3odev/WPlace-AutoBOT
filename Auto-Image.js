@@ -233,9 +233,8 @@
   };
 
   const mod = await import('https://wplace.live/_app/immutable/chunks/B_ghyyfR.js');
-  const aa = mod.g; // chính là store U được export là 'g'
+  const aa = mod.g; 
   
-  // optional: hàm lấy token, có thể chờ token sẵn sàng nếu cần
   async function getCaptchaToken(retries = 10, delay = 500) {
     for (let i = 0; i < retries; i++) {
       const t = aa?.captcha?.token;
@@ -249,13 +248,17 @@
     async paintPixelInRegion(regionX, regionY, pixelX, pixelY, color) {
       try {
         const token = await getCaptchaToken();
+        if (!token) {
+          console.warn('No captcha token yet'); 
+          return false;
+        }
         const res = await fetch(`https://backend.wplace.live/s0/pixel/${regionX}/${regionY}`, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
           credentials: 'include',
-          body: JSON.stringify({ coords: [pixelX, pixelY], colors: [color],t:token  })
+          body: JSON.stringify({ coords: [pixelX, pixelY], colors: [color], t: token })
         });
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
         return data?.painted === 1;
       } catch {
         return false;
