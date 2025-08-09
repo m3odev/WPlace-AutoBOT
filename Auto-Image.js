@@ -229,15 +229,19 @@
       return text;
     }
   };
-
+  
   const WPlaceService = {
+    const mod = await import('https://wplace.live/_app/immutable/chunks/B_ghyyfR.js'); 
+    const aa = mod.g;
+    // console.log(aa); 
+    console.log(aa.captcha?.token);
     async paintPixelInRegion(regionX, regionY, pixelX, pixelY, color) {
       try {
         const res = await fetch(`https://backend.wplace.live/s0/pixel/${regionX}/${regionY}`, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
           credentials: 'include',
-          body: JSON.stringify({ coords: [pixelX, pixelY], colors: [color] })
+          body: JSON.stringify({ coords: [pixelX, pixelY], colors: [color],t:aa.captcha?.token })
         });
         const data = await res.json();
         return data?.painted === 1;
